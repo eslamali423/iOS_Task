@@ -7,7 +7,7 @@
 
 import UIKit
 
-class SectionHeaderView: UIView{
+class HeaderView: UIView{
 
    
     //MARK:- Vars
@@ -94,7 +94,7 @@ class SectionHeaderView: UIView{
 }
 
 //MARK:- Extension for CollectionView Functions
-extension SectionHeaderView :  UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout  {
+extension HeaderView :  UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout  {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return 10
     }

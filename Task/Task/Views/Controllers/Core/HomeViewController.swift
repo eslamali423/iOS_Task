@@ -11,6 +11,9 @@ class HomeViewController: UIViewController {
     
     
     //MARK:- Vars
+    
+    var categoriesViewModel = CategoryViewModel()
+    
     private let searchBar : UISearchBar = {
         let search = UISearchBar()
         search.placeholder = "هل تبحث عن منتج؟"
@@ -22,9 +25,10 @@ class HomeViewController: UIViewController {
     
     private let tableView : UITableView = {
         let table = UITableView(frame: .zero, style: .grouped)
-        table.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        table.register(CollectionViewTableViewCell.self, forCellReuseIdentifier: CollectionViewTableViewCell.identifier)
         return table
     }()
+    
     
     
     
@@ -36,10 +40,14 @@ class HomeViewController: UIViewController {
         view.backgroundColor = .systemBackground
         
         cinfigureNavBar()
+        configureHeroHeaderView()
+        
         view.addSubview(tableView)
         
         tableView.delegate = self
         tableView.dataSource = self
+        
+        categoriesViewModel.getCategories()
         
         
         
@@ -63,6 +71,13 @@ class HomeViewController: UIViewController {
         
     }
     
+    //MARK:- Header View With a random Movie
+    func configureHeroHeaderView()  {
+       let  headerView = HeaderView(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: view.bounds.height / 3))
+        tableView.tableHeaderView = headerView
+ 
+    }
+    
     
     
     
@@ -76,8 +91,11 @@ extension HomeViewController : UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! UITableViewCell
-        
+        guard let cell =  tableView.dequeueReusableCell(withIdentifier: CollectionViewTableViewCell.identifier, for: indexPath) as? CollectionViewTableViewCell
+        else {
+            print("can't get category cell")
+            return UITableViewCell()
+        }
         return cell
     }
     
@@ -88,12 +106,29 @@ extension HomeViewController : UITableViewDelegate, UITableViewDataSource {
     
     // set the height for section
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        
+        if section == 0 {
+            return 0
+        }
+        else {
+            return 350
+        }
+        
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 300
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let   headerView = SectionHeaderView(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: view.bounds.height / 2))
+        if section == 0 {
+            return UIView()
+        }else {
+        
+            let   headerView = SectionView(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: view.bounds.height / 2.2))
         return headerView
+            
+        }
     }
     
     

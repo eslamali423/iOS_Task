@@ -25,7 +25,7 @@ class CategoryCollectionViewCell: UICollectionViewCell {
         let label =  UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.numberOfLines = 1
-        label.textColor = .white
+        label.textColor = .label
         label.textAlignment = .center
         label.text = "Category Title"
         label.font = .systemFont(ofSize: 15, weight: .bold)
@@ -37,7 +37,7 @@ class CategoryCollectionViewCell: UICollectionViewCell {
     //MARK:- Initilizers
     override init(frame: CGRect) {
         super.init(frame: frame)
-        contentView.backgroundColor = .blue
+        contentView.backgroundColor = .systemBackground
         contentView.addSubview(CategoryImageView)
         contentView.addSubview(titleLabel)
 
@@ -53,9 +53,6 @@ class CategoryCollectionViewCell: UICollectionViewCell {
             CategoryImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
             CategoryImageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
             CategoryImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
-          
-          
-            
             CategoryImageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -30),
 
 
