@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SDWebImage
 
 class ProductCollectionViewCell: UICollectionViewCell {
  
@@ -168,6 +169,19 @@ class ProductCollectionViewCell: UICollectionViewCell {
         
         
         ])
+    }
+    
+    
+    func configureCell(model : Product) {
+        let url = URL(string: model.image ?? "")
+    
+        self.productImageView.sd_setImage(with: url, completed: nil)
+        self.brandLabel.text = model.brand
+        self.oldPriceLabel.text = "\(model.variants[0].price)"
+        self.newPriceLabel.text = "\(model.variants[0].salePrice)"
+        self.discountLabel.text = "\(model.variants[0].saleAmount)"
+        self.discriptionLabel.text = model.title
+    
     }
     
     

@@ -8,11 +8,11 @@
 import Foundation
 import Alamofire
 
-enum CategoryNetwroking {
-    case getCategories
+enum BaseDataNetwroking {
+    case getData
 }
 
-extension CategoryNetwroking : TargetType {
+extension BaseDataNetwroking : TargetType {
     var baseUrl: String {
         switch self {
         default :
@@ -23,7 +23,7 @@ extension CategoryNetwroking : TargetType {
     
     var path: String {
         switch self {
-        case .getCategories:
+        case .getData:
             return ""
        
 
@@ -32,7 +32,7 @@ extension CategoryNetwroking : TargetType {
     
     var method: HTTPMethod {
         switch self  {
-        case .getCategories :
+        case .getData :
             return .get
             
      
@@ -41,7 +41,7 @@ extension CategoryNetwroking : TargetType {
     
     var task: Task {
         switch self {
-        case .getCategories:
+        case .getData:
             return .requestPlain
        
         }
