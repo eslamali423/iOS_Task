@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SDWebImage
 
 class CategoryCollectionViewCell: UICollectionViewCell {
     
@@ -37,10 +38,10 @@ class CategoryCollectionViewCell: UICollectionViewCell {
     //MARK:- Initilizers
     override init(frame: CGRect) {
         super.init(frame: frame)
+        
         contentView.backgroundColor = .systemBackground
         contentView.addSubview(CategoryImageView)
         contentView.addSubview(titleLabel)
-
         ConfigureConstraints()
     }
     
@@ -58,17 +59,25 @@ class CategoryCollectionViewCell: UICollectionViewCell {
 
             
         
-            titleLabel.topAnchor.constraint(equalTo: CategoryImageView.bottomAnchor,constant: 8),
+            titleLabel.topAnchor.constraint(equalTo: CategoryImageView.bottomAnchor,constant: -8),
 
             titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
             titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
 
-            
-            
-            
+   
         ])
     }
     
+    
+    public func configureCell(model : Block) {
+        self.titleLabel.text = model.title
+        let url = URL(string: model.blockImage ?? "")
+        self.CategoryImageView.sd_setImage(with: url, completed: nil)
+        
+        
+    }
+  
+  
     
     
     
