@@ -12,14 +12,12 @@ class HeaderView: UIView{
    
     //MARK:- Vars
     
-  
-    
-    
+    var categoryViewModel = CategoryViewModel()
+
     private let HeaderImageView : UIImageView = {
        let image = UIImageView()
         image.contentMode = .scaleAspectFill
         image.image = UIImage(named: "logo")
-        image.translatesAutoresizingMaskIntoConstraints = false
         image.clipsToBounds = true
         image.alpha = 0.5
         return image
@@ -29,12 +27,10 @@ class HeaderView: UIView{
         // Layout
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
-        layout.itemSize = CGSize(width: 140, height: 200)
         
         let collectionView = UICollectionView(frame: .zero,  collectionViewLayout: layout)
         collectionView.register(CategoryCollectionViewCell.self, forCellWithReuseIdentifier: CategoryCollectionViewCell.identifier)
-       // collectionView.translatesAutoresizingMaskIntoConstraints = false
- 
+        collectionView.backgroundColor = .clear
         return collectionView
     }()
     
@@ -45,18 +41,19 @@ class HeaderView: UIView{
   //MARK:- Initlizaers
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = .white
-       // addSubview(HeaderImageView)
+        backgroundColor = .systemBackground
+        self.clipsToBounds = true
+        
+        addSubview(HeaderImageView)
         addSubview(collectionView)
         
-
-
-        applyConstrains()
         
+        getCategories ()
         collectionView.delegate = self
         collectionView.dataSource = self
     
     }
+    
     
     
     
@@ -66,37 +63,37 @@ class HeaderView: UIView{
     
     override func layoutSubviews() {
         super.layoutSubviews()
-
-        collectionView.frame = bounds
-    }
-   
-    //MARK:- Constraints
-    private func applyConstrains() {
-        NSLayoutConstraint.activate([
-            
-//            HeaderImageView.leadingAnchor.constraint(equalTo: leadingAnchor),
-//            HeaderImageView.trailingAnchor.constraint(equalTo: trailingAnchor),
-//            HeaderImageView.bottomAnchor.constraint(equalTo: bottomAnchor),
-//            HeaderImageView.topAnchor.constraint(equalTo: topAnchor),
-
-//            collectionView.leadingAnchor.constraint(equalTo: leadingAnchor),
-//            collectionView.leadingAnchor.constraint(equalTo: trailingAnchor),
-//            collectionView.topAnchor.constraint(equalTo: topAnchor, constant: 90),
-//            collectionView.bottomAnchor.constraint(equalTo: bottomAnchor,constant: -10),
-//
-//            collectionView.heightAnchor.constraint(equalToConstant: 150)
-
-        ])
+        //let imageSize: CGFloat = bounds.height
+        HeaderImageView.frame = CGRect(
+            x: 0,
+            y: 0,
+            width: bounds.width,
+            height: bounds.height
+        )
+        collectionView.frame = CGRect(x: 0, y: bounds.height/2 - 10, width: bounds.width, height: bounds.height/2)
+ 
     }
     
+    //MARK:- Get Categories
+    func getCategories () {
+        categoryViewModel.getCat { [weak self](isSuccess) in
+            if isSuccess
+            {DispatchQueue.main.async { [weak self] in
+                
+                self?.HeaderImageView.sd_setImage(with: URL(string: (self?.categoryViewModel.imageUrl)! ), completed: nil)
+                self?.collectionView.reloadData()
+            }
+               
+            }
+        }
+    }
     
-
 }
 
 //MARK:- Extension for CollectionView Functions
 extension HeaderView :  UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout  {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 10
+        return categoryViewModel.catgory.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -107,6 +104,7 @@ extension HeaderView :  UICollectionViewDelegate, UICollectionViewDataSource, UI
             return UICollectionViewCell()
         }
         
+        cell.configureCell(model: categoryViewModel.catgory[indexPath.row])
         return cell
                 
         }
@@ -115,13 +113,7 @@ extension HeaderView :  UICollectionViewDelegate, UICollectionViewDataSource, UI
           return CGSize(width: 150, height: 150)
       }
     
-    
-    
-    
-    
-    
     }
-    
     
     
 
