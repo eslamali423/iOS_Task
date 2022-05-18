@@ -1,25 +1,28 @@
 //
-//  SectionHeaderView.swift
+//  FooterView.swift
 //  Task
 //
-//  Created by Eslam Ali  on 16/05/2022.
+//  Created by Eslam Ali  on 17/05/2022.
 //
 
 import UIKit
 
-class HeaderView: UIView{
-
-   
-    //MARK:- Vars
-   public var blocks : [Block] = []
+class FooterView : UIView {
     
-    private let HeaderImageView : UIImageView = {
-       let image = UIImageView()
-        image.contentMode = .scaleToFill
-        image.clipsToBounds = true
-        
-        
-        return image
+    //MARK:- Vars
+    
+    var brands : [Brand] = []
+    
+    private let titleLabel : UILabel = {
+        let label =  UILabel()
+        label.numberOfLines = 1
+        label.textColor = .black
+        label.textAlignment = .right
+        label.text = "Category Title"
+        label.font = UIFont(name: "Cairo-Bold", size: 15)
+//        label.font = .systemFont(ofSize: 15, weight: .bold)
+        label.adjustsFontSizeToFitWidth = true
+        return label
     }()
     
     private let collectionView : UICollectionView = {
@@ -33,80 +36,67 @@ class HeaderView: UIView{
         collectionView.backgroundColor = .clear
         collectionView.semanticContentAttribute = .forceRightToLeft
         collectionView.translatesAutoresizingMaskIntoConstraints = false
-        collectionView.showsHorizontalScrollIndicator = false
-
-
+        
         return collectionView
     }()
     
-
-   
-    
-  //MARK:- Initlizaers
-    init(frame: CGRect, blocks : [Block], image: String) {
+    //MARK:- Initlizaers
+    init(frame: CGRect, brands : [Brand], text: String) {
         super.init(frame: frame)
         backgroundColor = .systemBackground
         self.clipsToBounds = true
-        
-        addSubview(HeaderImageView)
+        self.brands = brands
+       addSubview(titleLabel)
         addSubview(collectionView)
-
-        self.blocks = blocks
-        self.HeaderImageView.sd_setImage(with: URL(string: image ), completed: nil)
+        titleLabel.text = text
         
-
         collectionView.delegate = self
         collectionView.dataSource = self
-    
+        
     }
 
     required init?(coder: NSCoder) {
         fatalError()
     }
-
-    //MARK:- Layouts / Constraints 
+    
     override func layoutSubviews() {
         super.layoutSubviews()
-        //let imageSize: CGFloat = bounds.height
-        HeaderImageView.frame = CGRect(
-            x: 0,
-            y: 0,
-            width: bounds.width,
-            height: bounds.height / 1.5
-        )
-        collectionView.frame = CGRect(x: 0, y: HeaderImageView.frame.height - 60, width: bounds.width - 10, height: bounds.height/2)
- 
+        titleLabel.frame = CGRect(x: -10, y: 0, width: bounds.width, height: 20)
+        collectionView.frame = CGRect(x: 0, y: titleLabel.bounds.height + 5 , width: bounds.width, height: bounds.height - titleLabel.bounds.height - 5)
+        
     }
-    
-
     
 }
 
 //MARK:- Extension for CollectionView Functions
-extension HeaderView :  UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout  {
+extension FooterView :  UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout  {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return self.blocks.count
+        return brands.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-       
+        
         guard let cell =  collectionView.dequeueReusableCell(withReuseIdentifier: CategoryCollectionViewCell.identifier, for: indexPath) as? CategoryCollectionViewCell
         else {
             print("can't get category cell")
             return UICollectionViewCell()
         }
         
-        cell.configureCell(model: blocks[indexPath.row])
+        cell.configureCell(model: brands[indexPath.row])
+        cell.contentView.layer.borderWidth = 0
         return cell
-                
-        }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-          return CGSize(width: 120, height: 140)
-      }
-    
+        
     }
     
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: 150, height: 150)
+    }
     
+}
+
+
+
+
+
 
 

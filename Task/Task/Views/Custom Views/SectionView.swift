@@ -11,11 +11,11 @@ import SDWebImage
 
 class SectionView: UIView{
 
-   
-    var productViewModel = ProductsViewModel()
+    //MARK:- Vars
+    
+    var products : [Product] = []
     var image = ""
     
-    //MARK:- Vars
     private let HeaderImageView : UIImageView = {
        let image = UIImageView()
         image.contentMode = .scaleAspectFill
@@ -31,51 +31,47 @@ class SectionView: UIView{
         label.numberOfLines = 1
         label.textColor = .white
         label.textAlignment = .center
-        label.text = "Category Title"
-        label.font = .systemFont(ofSize: 25, weight: .heavy)
+        label.font = UIFont(name: "Cairo-Bold", size: 25)
+//        label.font = .systemFont(ofSize: 25, weight: .heavy)
         label.adjustsFontSizeToFitWidth = true
         return label
     }()
     
     
-//    private let collectionView : UICollectionView = {
-//        // Layout
-//        let layout = UICollectionViewFlowLayout()
-//        layout.scrollDirection = .horizontal
-//        layout.itemSize = CGSize(width: 140, height: 200)
-//
-//        let collectionView = UICollectionView(frame: .zero,  collectionViewLayout: layout)
-//        collectionView.register(ProductCollectionViewCell.self, forCellWithReuseIdentifier: ProductCollectionViewCell.identifier)
-//       // collectionView.translatesAutoresizingMaskIntoConstraints = false
-//
-//        return collectionView
-//    }()
+    private let collectionView : UICollectionView = {
+        // Layout
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        layout.itemSize = CGSize(width: 140, height: 300)
+
+        let collectionView = UICollectionView(frame: .zero,  collectionViewLayout: layout)
+        collectionView.register(ProductCollectionViewCell.self, forCellWithReuseIdentifier: ProductCollectionViewCell.identifier)
+        collectionView.backgroundColor = .clear
+        collectionView.semanticContentAttribute = .forceRightToLeft
+       // collectionView.translatesAutoresizingMaskIntoConstraints = false
+
+        return collectionView
+    }()
     
  
-    
-   
-    
   //MARK:- Initlizaers
-    init(frame: CGRect, image : String, text: String) {
+    init(frame: CGRect, image : String, title: String, products : [Product]) {
         super.init(frame: frame)
         backgroundColor = .systemBackground
         addSubview(HeaderImageView)
-        HeaderImageView.addSubview(titleLabel)
-        titleLabel.text = text
-        HeaderImageView.sd_setImage(with: URL(string: image), completed: nil)
-      //  addSubview(collectionView)
+        addSubview(titleLabel)
+        titleLabel.text = title
         
+        addSubview(collectionView)
+       
+        self.titleLabel.text = title
         self.image = image
-        
-        
+        self.products = products
+        HeaderImageView.sd_setImage(with: URL(string: image), completed: nil)
         
 
-
-        applyConstrains()
-        
-        
-//        collectionView.delegate = self
-//        collectionView.dataSource = self
+        collectionView.delegate = self
+        collectionView.dataSource = self
     
     }
     
@@ -85,31 +81,30 @@ class SectionView: UIView{
         fatalError()
     }
     
+
+   //MARK:- Layout / Constraints 
     override func layoutSubviews() {
         super.layoutSubviews()
-
-        HeaderImageView.frame = bounds
-        titleLabel.frame = CGRect(x: 0, y: HeaderImageView.frame.height/2, width: HeaderImageView.frame.width, height: 20)
+        //let imageSize: CGFloat = bounds.height
+        HeaderImageView.frame = CGRect(
+            x: 0,
+            y: 0,
+            width: bounds.width,
+            height: bounds.height / 2
+        )
+        titleLabel.frame = CGRect(
+            x: 0,
+            y: 40,
+            width: bounds.width,
+            height: 50
+        )
+        
+        collectionView.frame = CGRect(x: 0, y: 70
+                                      , width: bounds.width - 10, height: bounds.height  )
+ 
     }
-   
-    //MARK:- Constraints
-    private func applyConstrains() {
-        NSLayoutConstraint.activate([
-            
-//            HeaderImageView.leadingAnchor.constraint(equalTo: leadingAnchor),
-//            HeaderImageView.trailingAnchor.constraint(equalTo: trailingAnchor),
-//            HeaderImageView.bottomAnchor.constraint(equalTo: bottomAnchor),
-//            HeaderImageView.topAnchor.constraint(equalTo: topAnchor),
+    
 
-//            collectionView.leadingAnchor.constraint(equalTo: leadingAnchor),
-//            collectionView.leadingAnchor.constraint(equalTo: trailingAnchor),
-//            collectionView.topAnchor.constraint(equalTo: topAnchor, constant: 90),
-//            collectionView.bottomAnchor.constraint(equalTo: bottomAnchor,constant: -10),
-//
-//            collectionView.heightAnchor.constraint(equalToConstant: 150)
-
-        ])
-    }
     
   
     
@@ -120,7 +115,8 @@ class SectionView: UIView{
 //MARK:- Extension for CollectionView Functions
 extension SectionView :  UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout  {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 2
+        return self.products.count
+        
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -130,13 +126,13 @@ extension SectionView :  UICollectionViewDelegate, UICollectionViewDataSource, U
             print("can't get category cell")
             return UICollectionViewCell()
         }
-        
+        cell.configureCell(model: self.products[indexPath.row])
         return cell
                 
         }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-          return CGSize(width: 150, height: 350)
+          return CGSize(width: 150, height: 250)
       }
     
     
