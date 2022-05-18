@@ -7,32 +7,26 @@
 
 import UIKit
 
-
-
-
-
 class CollectionViewTableViewCell: UITableViewCell {
     
     //MARK:- Vars
     
     static let identifier = "CollectionViewTableViewCell"
     
-    var productViewModel = ProductsViewModel()
-    
-    
+  
     var products : [Product] = []
     
-    //    private let titleLabel : UILabel = {
-    //        let label =  UILabel()
-    //        label.translatesAutoresizingMaskIntoConstraints = false
-    //        label.numberOfLines = 1
-    //        label.textColor = .white
-    //        label.textAlignment = .center
-    //        label.text = "Title"
-    //        label.font = .systemFont(ofSize: 25, weight: .bold)
-    //        label.adjustsFontSizeToFitWidth = true
-    //        return label
-    //    }()
+ 
+    private let titleLabel : UILabel = {
+        let label =  UILabel()
+        label.numberOfLines = 1
+        label.textColor = .black
+        label.textAlignment = .right
+        label.font = UIFont(name: "Cairo-Bold", size: 16)
+       // label.font = .systemFont(ofSize: 16, weight: .bold)
+        label.adjustsFontSizeToFitWidth = true
+        return label
+    }()
     
     public let collectionView : UICollectionView = {
         // Layout
@@ -44,20 +38,21 @@ class CollectionViewTableViewCell: UITableViewCell {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.register(ProductCollectionViewCell.self, forCellWithReuseIdentifier: ProductCollectionViewCell.identifier)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.semanticContentAttribute = .forceRightToLeft
         collectionView.backgroundColor = .systemBackground
+        collectionView.showsHorizontalScrollIndicator = false
         return collectionView
     }()
     
     //MARK:- Life Cycle
     override init(style: UITableViewCell.CellStyle, reuseIdentifier : String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        // contentView.addSubview(titleLabel)
+       
         contentView.addSubview(collectionView)
+        contentView.addSubview(titleLabel)
         
-        getData()
-        
-        
-        
+      
+    
         collectionView.delegate = self
         collectionView.dataSource = self
     }
@@ -69,35 +64,19 @@ class CollectionViewTableViewCell: UITableViewCell {
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        collectionView.frame = contentView.bounds
+        titleLabel.frame = CGRect(x: -10, y: 10, width: bounds.width, height: 20)
+        collectionView.frame = CGRect(x: 0, y: titleLabel.frame.height + 5
+                                      , width: bounds.width - 10, height: bounds.height  )
+        
+ 
     }
     
-    private func configureConstraints(){
-        NSLayoutConstraint.activate([
-            
-            //            titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
-            //            titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
-            //            titleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
-            
-//
-//            collectionView.topAnchor.constraint(equalTo: contentView.bottomAnchor,constant: -8),
-//            collectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
-//            collectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
-            
-        ])
-    }
-    
-    func getData () {
-        productViewModel.getData { [weak self](isSuccess) in
-            if isSuccess {
-                self?.collectionView.reloadData()
-            }
-        }
-    }
-    
-    func configure(model : [Product]) {
+  //MARK:- Cell Configuration with Model
+    func configure(model : [Product], title : String) {
         self.products = model
         DispatchQueue.main.async { [weak self] in
+            self?.titleLabel.text = title
+        
             self?.collectionView.reloadData()
         }
     }
@@ -105,6 +84,7 @@ class CollectionViewTableViewCell: UITableViewCell {
     
 }
 
+//MARK:- Extension for CollectionView Functions 
 extension CollectionViewTableViewCell: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -114,9 +94,9 @@ extension CollectionViewTableViewCell: UICollectionViewDelegate, UICollectionVie
                 print("can't get category cell")
                 return UICollectionViewCell()
             }
-            
+        
             cell.configureCell(model: products[indexPath.row] )
-            
+        
             return cell
             
         }
@@ -126,21 +106,12 @@ extension CollectionViewTableViewCell: UICollectionViewDelegate, UICollectionVie
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: 150, height: 300)
+        return CGSize(width: 150, height: 250)
     }
     
+   
+ 
     
-//    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-//        let view = UIView()
-//        let label = ""
-//        
-//        
-//    }
-    
-    
-    
-    
-    
-    
-    
+
 }
+

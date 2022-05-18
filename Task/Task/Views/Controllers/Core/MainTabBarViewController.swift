@@ -33,9 +33,17 @@ class MainTabBarViewController: UITabBarController {
         vc3.title = "الأقسام"
         vc4.title = "العروض"
         vc5.title = "الرئيسة"
+        
+        
     
         tabBar.tintColor  = UIColor(red: 231/255.0, green: 93/255.0, blue: 36/255.0, alpha: 1.0)
+     
+        // for change font for TabBar
+        let appearance = UITabBarItem.appearance()
+        let attributes = [NSAttributedString.Key.font:UIFont(name: "Cairo-Bold", size: 10)]
+        appearance.setTitleTextAttributes(attributes as [NSAttributedString.Key : Any], for: [])
 
+        
         setViewControllers([vc1,vc2,vc3,vc4, vc5], animated: false)
         
     }

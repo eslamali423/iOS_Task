@@ -10,16 +10,31 @@ import SDWebImage
 
 class ProductCollectionViewCell: UICollectionViewCell {
  
+    //MARK:- Vars
     static let identifier = "ProductCollectionViewCell"
-
     
     private let productImageView : UIImageView = {
        let image = UIImageView()
         image.contentMode = .scaleToFill
-        image.image = UIImage(named: "logo")
+      
         image.translatesAutoresizingMaskIntoConstraints = false
         return image
     }()
+    
+    private let offerLabel : UILabel = {
+        let label =  UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.numberOfLines = 1
+        label.textColor = .white
+        label.textAlignment = .center
+        label.text = "عرض"
+        label.backgroundColor = .black
+        label.font = UIFont(name: "Cairo-Bold", size: 12)
+      //  label.font = .systemFont(ofSize: 12, weight: .bold)
+       
+        return label
+    }()
+   
     
     public let AddToBasketButton : UIButton = {
         let button = UIButton()
@@ -29,7 +44,8 @@ class ProductCollectionViewCell: UICollectionViewCell {
         button.layer.borderWidth = 2
         button.layer.borderColor =  UIColor(red: 231/255.0, green: 93/255.0, blue: 36/255.0, alpha: 1.0).cgColor
         button.setTitleColor( UIColor(red: 231/255.0, green: 93/255.0, blue: 36/255.0, alpha: 1.0), for: .normal)
-        button.titleLabel?.font = .systemFont(ofSize: 16, weight : .regular)
+        button.titleLabel?.font = UIFont(name: "Cairo-Bold", size: 12)
+//        button.titleLabel?.font = .systemFont(ofSize: 16, weight : .regular)
         return button
     }()
     
@@ -40,8 +56,8 @@ class ProductCollectionViewCell: UICollectionViewCell {
         label.numberOfLines = 1
         label.textColor = .label
         label.textAlignment = .right
-        label.text = "Brand"
-        label.font = .systemFont(ofSize: 12, weight: .regular)
+        label.font = UIFont(name: "Cairo-Bold", size: 12)
+      //  label.font = .systemFont(ofSize: 12, weight: .regular)
         label.adjustsFontSizeToFitWidth = true
         return label
     }()
@@ -52,9 +68,17 @@ class ProductCollectionViewCell: UICollectionViewCell {
         label.numberOfLines = 1
         label.textColor = .label
         label.textAlignment = .right
-        label.text = "35.5LE"
-        label.font = .systemFont(ofSize: 12, weight: .regular)
+        label.font = UIFont(name: "Cairo-Regular", size: 12)
+        label.font = .systemFont(ofSize: 14, weight: .regular)
         label.adjustsFontSizeToFitWidth = true
+        
+        
+        let attributeString: NSMutableAttributedString = NSMutableAttributedString(string: "Text")
+            attributeString.addAttribute(NSAttributedString.Key.strikethroughStyle, value: 2, range: NSRange(location: 0, length: attributeString.length))
+        
+        label.attributedText = attributeString
+        
+        
         return label
     }()
     
@@ -64,8 +88,7 @@ class ProductCollectionViewCell: UICollectionViewCell {
         label.numberOfLines = 1
         label.textColor = UIColor(red: 231/255.0, green: 93/255.0, blue: 36/255.0, alpha: 1.0)
         label.textAlignment = .right
-        label.text = "خصم ٢٥"
-        label.font = .systemFont(ofSize: 12, weight: .regular)
+        label.font = UIFont(name: "Cairo-Regular", size: 12)
         label.adjustsFontSizeToFitWidth = true
         return label
     }()
@@ -76,21 +99,19 @@ class ProductCollectionViewCell: UICollectionViewCell {
         label.numberOfLines = 1
         label.textColor = .label
         label.textAlignment = .right
-        label.text = "35.5LE"
-        label.font = .systemFont(ofSize: 15, weight: .semibold)
+        label.font = UIFont(name: "Cairo-Bold", size: 14)
         label.adjustsFontSizeToFitWidth = true
         return label
     }()
     
-    private let discriptionLabel : UILabel = {
+    private let describtionLabel : UILabel = {
         let label =  UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.numberOfLines = 0
+        label.numberOfLines = 2
         label.textColor = .label
         label.textAlignment = .right
-        label.text = "Product Descripton Product DescriptonProduct DescriptonProduct DescriptonProduct DescriptonProduct DescriptonProduct Descripton"
-        label.font = .systemFont(ofSize: 15, weight: .regular)
-        label.adjustsFontSizeToFitWidth = true
+        label.font = UIFont(name: "Cairo-Regular", size: 12)
+        label.adjustsFontSizeToFitWidth = false
         label.frame = CGRect(x:0,y:0,width:label.intrinsicContentSize.width,height:label.intrinsicContentSize.height)
 
         return label
@@ -122,22 +143,23 @@ class ProductCollectionViewCell: UICollectionViewCell {
         fatalError()
     }
     
-//    override func layoutSubviews() {
-//        super.layoutSubviews()
-//
-//        productImageView.frame = contentView.bounds
-//    }
-    
-    
+    //MARK:- Layout / Constraints
     private func setupLayouts(){
         contentView.addSubview(productImageView)
+        contentView.addSubview(offerLabel)
+        
         contentView.addSubview(AddToBasketButton)
         stackView.addArrangedSubview(discountLabel)
         stackView.addArrangedSubview(oldPriceLabel)
         
         contentView.addSubview(stackView)
         contentView.addSubview(newPriceLabel)
-        contentView.addSubview(discriptionLabel)
+        contentView.addSubview(describtionLabel)
+        
+        contentView.layer.borderWidth = 0.5
+        contentView.layer.cornerRadius = 5
+        contentView.layer.borderColor = #colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)
+        
     }
     
     private func configureConstraints (){
@@ -146,32 +168,37 @@ class ProductCollectionViewCell: UICollectionViewCell {
             productImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor,constant: 8),
             productImageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor,constant: -8),
             productImageView.topAnchor.constraint(equalTo: contentView.topAnchor,constant: 8),
-            productImageView.heightAnchor.constraint(equalToConstant: 130),
+            productImageView.heightAnchor.constraint(equalToConstant: 110),
+            
+            offerLabel.leadingAnchor.constraint(equalTo: contentView.trailingAnchor,constant: -145),
+           offerLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 5),
+           offerLabel.heightAnchor.constraint(equalToConstant: 20),
+            offerLabel.widthAnchor.constraint(equalToConstant: 35),
             
             AddToBasketButton.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-            AddToBasketButton.topAnchor.constraint(equalTo: productImageView.bottomAnchor,constant: 2),
+            AddToBasketButton.topAnchor.constraint(equalTo: productImageView.bottomAnchor),
             AddToBasketButton.heightAnchor.constraint(equalToConstant: 35),
             AddToBasketButton.widthAnchor.constraint(equalToConstant: 120),
             
           
-           stackView.topAnchor.constraint(equalTo: AddToBasketButton.bottomAnchor,constant: 2),
+           stackView.topAnchor.constraint(equalTo: AddToBasketButton.bottomAnchor),
             stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor,constant: 8),
             stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor,constant: -8),
             
-            newPriceLabel.topAnchor.constraint(equalTo: stackView.bottomAnchor,constant: 2),
+            newPriceLabel.topAnchor.constraint(equalTo: stackView.bottomAnchor),
             newPriceLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor,constant: 8),
             newPriceLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor,constant: -8),
             
-             discriptionLabel.topAnchor.constraint(equalTo: newPriceLabel.bottomAnchor,constant: 2),
-             discriptionLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor,constant: 8),
-             discriptionLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor,constant: -8),
+             describtionLabel.topAnchor.constraint(equalTo: newPriceLabel.bottomAnchor),
+             describtionLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor,constant: 8),
+             describtionLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor,constant: -8),
             
         
         
         ])
     }
     
-    
+    //MARK:- Configure Cell with Model
     func configureCell(model : Product) {
         let url = URL(string: model.image ?? "")
     
@@ -179,8 +206,8 @@ class ProductCollectionViewCell: UICollectionViewCell {
         self.brandLabel.text = model.brand
         self.oldPriceLabel.text = "\(model.variants[0].price)"
         self.newPriceLabel.text = "\(model.variants[0].salePrice)"
-        self.discountLabel.text = "\(model.variants[0].saleAmount)"
-        self.discriptionLabel.text = model.title
+        self.discountLabel.text = "خصم \(model.variants[0].saleAmount) %"
+        self.describtionLabel.text = model.title
     
     }
     
