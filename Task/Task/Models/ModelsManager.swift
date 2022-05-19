@@ -10,7 +10,7 @@ import Foundation
 
 struct APIResponse : Codable {
     let status : Status
-    let data : [DataContent]
+    let data : Results
 }
 
 struct Status : Codable {
@@ -18,7 +18,7 @@ struct Status : Codable {
     let code : Int
 }
 
-struct DataContent : Codable {
+struct Results : Codable {
     let banners : [Banner]
 }
 
@@ -32,48 +32,43 @@ struct Banner : Codable {
 
 struct Content : Codable {
     let backgroundImage : String?
-    let heading : String
+    let heading : String?
     let blocks : [Block]?
     let products : [Product]?
+    let brands : [Brand]?
 }
 
 struct Block : Codable {
-    let type : String
+    let type : String?
     let id : Int
-    let title : String
-    let blockImage : String
+    let title : String?
+    let blockImage : String?
+   
+}
+
+struct Brand : Codable {
+    let image : String
 }
 
 
 struct Product : Codable {
     let id : Int
     let title : String
-    let image : String
+    let image : String?
     let brand : String
-    let rating : Int
     let variants : [Variant]
 
 }
 
 struct Variant : Codable {
     let id : Int
-    let price : Int
-    let salePrice : Int
+    let price : Double
+    let salePrice : Double
     let saleAmount : Double
 }
 
 
 
-/*
- 
- "id":109599,
-                      "title":"Ø¨Ø§Ù‚Ø© Ø§Ù„ØµØ§Ø±ÙˆØ® 2 Ù„Ù„Ø³Ø¹Ø§Ø¯Ø© Ø§Ù„Ø­Ù‚ÙŠÙ‚ÙŠØ©",
-                      "image":"https://s3.ap-southeast-1.amazonaws.com/elmarasi/proimgs/Rocket-Set-2.jpg",
-                      "brand":"Marasi",
-                      "rating":0,
-                      "variants
- 
- */
 
 
 
